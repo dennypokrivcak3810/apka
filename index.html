@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080a10">
+<link rel="manifest" href="manifest.json">
+<title>NEXUS Sports</title>
+<style>
+:root{--bg:#080a10;--panel:#11141d;--panel2:#171b26;--text:#f5f7fb;--muted:#929aac;--accent:#6c63ff;--green:#39d98a;--line:#252b39}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}header{padding:18px 6%;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:rgba(8,10,16,.9);backdrop-filter:blur(12px);z-index:5}.logo{font-size:24px;font-weight:900}.logo span{color:var(--accent)}button{border:0;border-radius:9px;padding:10px 14px;background:var(--panel2);color:var(--text);cursor:pointer}.hero{padding:70px 6% 45px;background:radial-gradient(circle at 70% 20%,#28216b55,transparent 35%)}h1{font-size:clamp(40px,8vw,72px);margin:0 0 12px}.grad{color:#918aff}.hero p{color:var(--muted);max-width:600px;font-size:18px}.actions{display:flex;gap:10px;margin-top:25px;flex-wrap:wrap}.primary{background:var(--accent)}main{max-width:1250px;margin:auto;padding:0 6% 60px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}.card{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:20px}.stat{font-size:28px;font-weight:800;margin-top:8px}.muted{color:var(--muted);font-size:13px}.section{margin-top:25px}.section h2{margin-bottom:15px}.matches{display:grid;gap:10px}.match{display:flex;justify-content:space-between;align-items:center;background:var(--panel2);padding:14px;border-radius:10px}.team{font-weight:bold}.score{font-weight:900}.install{display:none;margin-top:20px}.install.show{display:block}.tabs{display:flex;gap:8px;overflow:auto;margin:20px 0}.tabs button.active{background:var(--accent)}footer{text-align:center;color:var(--muted);padding:30px;border-top:1px solid var(--line)}@media(max-width:800px){.grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:500px){.grid{grid-template-columns:1fr 1fr}.hero{padding-top:45px}.card{padding:16px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">NE<span>XUS</span></div>
+  <div>
+    <button onclick="toggleTheme()">☀️</button>
+    <button id="installBtn" onclick="installApp()" style="display:none">📱 Instalovat</button>
+  </div>
+</header>
+
+<section class="hero">
+  <h1>Sport.<br><span class="grad">Na jednom místě.</span></h1>
+  <p>NEXUS je tvoje sportovní centrum pro výsledky, zápasy, tabulky a statistiky.</p>
+  <div class="actions">
+    <button class="primary" onclick="scrollToSection('matches')">Dnešní zápasy</button>
+    <button onclick="showInstall()">Přidat na plochu</button>
+  </div>
+  <div id="installBox" class="install card">
+    <b>📱 Instalace na iPadu</b>
+    <p class="muted">V Safari klepni na Sdílet → Přidat na plochu. PWA se pak otevře jako samostatná aplikace.</p>
+  </div>
+</section>
+
+<main>
+  <div class="tabs">
+    <button class="active" onclick="sport('Vše',this)">Vše</button>
+    <button onclick="sport('⚽ Fotbal',this)">⚽ Fotbal</button>
+    <button onclick="sport('🏒 Hokej',this)">🏒 Hokej</button>
+  </div>
+
+  <div class="grid">
+    <div class="card"><div class="muted">Dnešní zápasy</div><div class="stat">24</div></div>
+    <div class="card"><div class="muted">Živé zápasy</div><div class="stat">6</div></div>
+    <div class="card"><div class="muted">Sledovaní hráči</div><div class="stat">12</div></div>
+    <div class="card"><div class="muted">Uložené týmy</div><div class="stat">5</div></div>
+  </div>
+
+  <section id="matches" class="section">
+    <h2>Dnešní zápasy</h2>
+    <div class="matches">
+      <div class="match football"><span class="team">⚽ Barcelona</span><span class="score">18:30</span><span class="team">Real Madrid</span></div>
+      <div class="match hockey"><span class="team">🏒 Colorado</span><span class="score">20:00</span><span class="team">Dallas</span></div>
+      <div class="match football"><span class="team">⚽ Arsenal</span><span class="score">21:00</span><span class="team">Chelsea</span></div>
+      <div class="match hockey"><span class="team">🏒 Rangers</span><span class="score">22:30</span><span class="team">Islanders</span></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Top statistiky</h2>
+    <div class="grid">
+      <div class="card"><b>🥇 Nejvíc gólů</b><p class="muted">Alex Novak · 27</p></div>
+      <div class="card"><b>🎯 Nejvíc asistencí</b><p class="muted">David Kral · 31</p></div>
+      <div class="card"><b>🔥 Forma</b><p class="muted">Falcons · 8 výher</p></div>
+      <div class="card"><b>🧤 Brankář</b><p class="muted">Martin Vesely · 94.2%</p></div>
+    </div>
+  </section>
+</main>
+
+<footer>NEXUS Sports · Demo PWA · 2026</footer>
+
+<script>
+let deferredPrompt;
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;document.getElementById("installBtn").style.display="inline-block"});
+async function installApp(){if(!deferredPrompt){showInstall();return}deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null}
+function showInstall(){document.getElementById("installBox").classList.toggle("show")}
+function scrollToSection(id){document.getElementById(id).scrollIntoView({behavior:"smooth"})}
+function toggleTheme(){document.body.classList.toggle("light");document.documentElement.style.setProperty("--bg",document.body.classList.contains("light")?"#f4f6fa":"#080a10")}
+function sport(type,btn){document.querySelectorAll(".tabs button").forEach(x=>x.classList.remove("active"));btn.classList.add("active");document.querySelectorAll(".match").forEach(x=>{x.style.display=type==="Vše"||x.classList.contains(type.includes("Fotbal")?"football":"hockey")?"flex":"none"})}
+if("serviceWorker" in navigator) window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js"));
+</script>
+</body>
+</html>
